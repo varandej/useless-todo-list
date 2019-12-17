@@ -1,28 +1,65 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<template lang="html">
+  <div id="app" :class="{ 'turbo-mode': isInTurboMode }">
+    <Header />
+    <sui-grid class="root-wrapper">
+      <sui-grid-row>
+        <sui-grid-column :width="16">
+          <router-view></router-view>
+        </sui-grid-column>
+      </sui-grid-row>
+    </sui-grid>
+    <BlockLodaer />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapActions } from 'vuex';
+import ActionTypes from './store/action-types';
+import BlockLodaer from './common/components/block-loader';
+import Header from './common/components/header';
 
 export default {
   name: 'app',
+  created() {
+    this.initApplication();
+  },
+  computed: {
+    isInTurboMode() {
+      return this.$route.path === '/most-usefull-page';
+    },
+  },
+  methods: {
+    ...mapActions({
+      initApplication: ActionTypes.FETCH_TODOS,
+    }),
+  },
   components: {
-    HelloWorld
-  }
-}
+    BlockLodaer,
+    Header,
+  },
+};
+
 </script>
 
-<style>
+<style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  background-color: rgb(245, 255, 249);
+  color: green;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  min-height: 100%;
+}
+.root-wrapper {
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  min-width: 800px;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+.turbo-mode {
+  background-color: black !important;
 }
 </style>
